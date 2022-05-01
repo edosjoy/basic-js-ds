@@ -104,41 +104,53 @@ class BinarySearchTree {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
 
-    if (data === this.mainNode.data) {
-      this.mainNode = null;
-      return;
-    }
-
-    function deleteNode(findData, node) {
+    function removeNode(node, data) {
       if (node === null) {
-        return;
-      } else if (node.left !== null && findData === node.left.data) {
-        node.left = null;
-        return;
-      } else if (node.right !== null && findData === node.right.data) {
-        node.right = null;
-        return;
-      } else if (findData < node.data) {
-        return deleteNode(findData, node.left);
-      } else if (findData > node.data) {
-        return deleteNode(findData, node.right);
+        return null;
+      } else if (data < node.data) {
+        node.left = removeNode(node.left, data);
+        return node;
+      } else if (data > node.data) {
+        node.right = removeNode(node.right, data);
+        return node;
+      } else {
+        if (node.left === null && node.right === null) {
+          node === null;
+        }
+
+        if (node.left === null) {
+          node = node.right;
+          return node;
+        } else if (node.right === null) {
+          node = node.left;
+          return node;
+        }
+
+        let newNode = minNode(node.right);
+        node.data = newNode.data;
+        node.right = removeNode(node.right, newNode.data);
+        return node;
       }
     }
 
-    return deleteNode(data, this.mainNode);
+    function minNode(node) {
+      if (node.left === null) {
+        return node;
+      } else {
+        return minNode(node.left);
+      }
+    }
+
+    removeNode(this.mainNode, data);
   }
 
   min() {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
 
-    if (this.mainNode === null) {
-      return null;
-    }
-
     function minData(node) {
-      if (node.left.left === null) {
-        return node.left.data;
+      if (node.left === null) {
+        return node.data;
       } else {
         return minData(node.left);
       }
@@ -151,13 +163,9 @@ class BinarySearchTree {
     // throw new NotImplementedError('Not implemented');
     // remove line with error and write your code here
 
-    if (this.mainNode === null) {
-      return null;
-    }
-
     function maxData(node) {
-      if (node.right.right === null) {
-        return node.right.data;
+      if (node.right === null) {
+        return node.data;
       } else {
         return maxData(node.right);
       }
